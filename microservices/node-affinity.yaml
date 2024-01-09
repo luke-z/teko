@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-affinity-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: In
+            values:
+            - ssd
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-affinity-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: In
+            values:
+            - ssd
+          - key: color
+            operator: In
+            values:
+            - yellow
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-affinity-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: In
+            values:
+            - ssd
+            - hdd
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-affinity-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: In
+            values:
+            - ssd
+        - matchExpressions:
+          - key: color
+            operator: In
+            values:
+            - yellow
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-affinity-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: color
+                operator: In
+                values:
+                - yellow
+        - weight: 50
+          preference:
+            matchExpressions:
+              - key: disktype
+                operator: In
+                values:
+                - ssd

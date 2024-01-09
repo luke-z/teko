@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: blue-pod
+spec:
+  containers:
+  - name: green-container
+    image: nginx
+  tolerations:
+  - key: "color"
+    operator: "Equal"
+    value: "blue"
+    effect: "NoSchedule"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: green-pod
+spec:
+  containers:
+  - name: greem-container
+    image: nginx
+  tolerations:
+  - key: "color"
+    operator: "Equal"
+    value: "green"
+    effect: "NoSchedule"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: red-pod
+spec:
+  containers:
+  - name: red-container
+    image: nginx
+  tolerations:
+  - key: "color"
+    operator: "Equal"
+    value: "red"
+    effect: "NoSchedule"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: color-pod
+spec:
+  containers:
+  - name: color-container
+    image: nginx
+  tolerations:
+  - key: "color"
+    operator: "Exists"
+    effect: "NoSchedule"
