@@ -36,3 +36,41 @@ spec:
       periodSeconds: 10
       timeoutSeconds: 5
       successThreshold: 1 # if it succeeds once, the container is considered ready
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-failing-probe-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+
+    # Failing Startup Probe
+    startupProbe:
+      httpGet:
+        path: /nonexistentpath
+        port: 80
+      failureThreshold: 5
+      periodSeconds: 5
+
+    # Failing Liveness Probe
+    livenessProbe:
+      httpGet:
+        path: /nonexistentpath
+        port: 80
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+
+    # Failing Readiness Probe
+    readinessProbe:
+      tcpSocket:
+        port: 81 # Assuming the container isn't listening on this port
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 1
