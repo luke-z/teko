@@ -10,4 +10,4 @@ spec:
     - containerPort: 80
   - name: busybox-sidecar
     image: busybox
-    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+    command: ['sh', '-c', 'echo The app is running! && sleep 10']

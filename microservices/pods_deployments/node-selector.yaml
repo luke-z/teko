@@ -12,9 +12,9 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: ssd-node-selector-pod
+  name: ssd-node-name-pod
 spec:
   containers:
     - name: nginx
       image: nginx
-  nodeName: k3s-worker-01
+  nodeName: k3s-worker-1

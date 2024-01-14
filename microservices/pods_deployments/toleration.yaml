@@ -52,3 +52,12 @@ spec:
   - key: "color"
     operator: "Exists"
     effect: "NoSchedule"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: no-toleration-pod
+spec:
+  containers:
+  - name: no-toleration-container
+    image: nginx

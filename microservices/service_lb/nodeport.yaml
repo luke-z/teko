@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeport-deployment
+  labels:
+    app: nodeport-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nodeport-app
+  template:
+    metadata:
+      labels:
+        app: nodeport-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodeport-service
+spec:
+  type: NodePort
+  selector:
+    app: nodeport-app
+  ports:
+    # - protocol: TCP
+    - port: 8080
+      targetPort: 80
+      # NodePort field is optional. If not specified, Kubernetes will allocate one.
+      # nodePort: 30007
