@@ -3,11 +3,37 @@
 ## Multipass
 
 ```
+PLEASE BE CAREFUL WHEN SETTING STATIC IP ADDRESSES, MAKE SURE THEY ARE NOT USED!
+```
+
+```
 # IN CASE DNS DOES NOT WORK AFTER HOST MACHINE REBOOT:
 multipass restart <vm1> <vm2> <vm3>
 ```
 
+#### Hyper-V only:
+
+In case you want to use a virtual switch inside hyper-v and avoid using the bridged mode, replace step 2 and 3 from the installation guide with the following actions:
+
+1. Open the Hyper-V Manager and create a new internal virtual switch
+
+2. Set the IP range of the switch by executing the following command with PowerShell (launched as admin)
+```
+New-NetIPAddress -InterfaceAlias 'vEthernet (<switch name>)' -IPAddress 192.168.10.1 -PrefixLength 24
+```
+
+3. Launch the vms
+```
+multipass launch -n k3s-master -c 2 -m 4G -d 20G --network name=<switch name>,mode=manual
+```
+```
+multipass launch -n k3s-worker-* -c 2 -m 4G -d 20G --network name=<switch name>,mode=manual
+```
+
+From here, the installation process is the same, so you can continue with step 4.
+
 ### Installation
+
 
 1. Install multipass (choose hyperv or virtualbox)
 2. Set bridge network
