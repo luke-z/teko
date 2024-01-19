@@ -2,8 +2,16 @@
 
 ## Multipass
 
+```
+# IN CASE DNS DOES NOT WORK AFTER HOST MACHINE REBOOT:
+multipass restart <vm1> <vm2> <vm3>
+```
+
+### Installation
+
 1. Install multipass (choose hyperv or virtualbox)
 2. Set bridge network
+
 ```
 # get network name
 multipass networks
@@ -14,20 +22,23 @@ multipass set local.bridged-network="<windwos network interface name>"
 ```
 
 3. Launch the vms (change CPU and RAM according to your system performance)
+
 ```
 multipass launch -n k3s-master -c 2 -m 4G -d 20G --bridged
 ```
+
 ```
 multipass launch -n k3s-worker-* -c 2 -m 4G -d 20G --bridged
 ```
- 
- 4. Define networking in the vms
+
+4.  Define networking in the vms
+
 ```
-# connect to the vms using 
+# connect to the vms using
 multipass shell <vm name>
 
 # CAREFUL: choose available ips in your network (not in dhcp range).
-# to get the right interface for the vm, enter 
+# to get the right interface for the vm, enter
 ip a
 # selected the interface using the correct ip for your host network
 # use the following command to see the mac address of your interface:
@@ -48,8 +59,8 @@ network:
             set-name: <name of ubuntu interface>
             addresses: [192.168.x.x/24]  # ip from your network
     version: 2
-	
-	
+
+
 # Press ctrl+x, then y to safe the changes
 # Apply the config with and close the window
 
@@ -57,6 +68,7 @@ sudo netplan apply
 ```
 
 5. Install k3s on master node
+
 ```
 # Execute the following commands in Powershell
 # for the --node-ip flag, use the IP you set for the master in 99-multipass.yaml
@@ -64,19 +76,22 @@ sudo netplan apply
 multipass exec k3s-master -- bash -c "curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC='--node-ip=<IP> --cluster-init --disable servicelb' sh -"
 ```
 
-5.1 get k3s token
+6. get k3s token
+
 ```
 multipass exec k3s-master sudo cat /var/lib/rancher/k3s/server/node-token
 ```
 
-6. Install k3s on all workers
+7. Install k3s on all workers
+
 ```
 # replace IP_MASTER with the master node ip, the TOKEN with the previous token and replace IP_WORKER with the worker IP
 
 multipass exec k3s-worker-* -- bash -c "curl -sfL https://get.k3s.io | K3S_URL=https://<IP_MASTER>:6443 K3S_TOKEN=<TOKEN> INSTALL_K3S_EXEC='--node-ip=<IP_WORKER>' sh -"
 ```
 
-7. Install kube-vip (best to use sudo -i), only on master node!
+8. Install kube-vip (best to use sudo -i), only on master node!
+
 ```
 # Determine your network interface name for example with ip a
 export INTERFACE=<ubuntu network interface>
@@ -99,12 +114,13 @@ kubectl run -it kube-vip-init  --image=ghcr.io/kube-vip/kube-vip:main --restart=
     --leaderElection > /var/lib/rancher/k3s/server/manifests/kube-vip-daemonset.yaml
 
 # Open the newly generated file and delete the last line in the generated yaml file (pod deleted ...)
-# currently there is a bug where v0.7.0 is used, but it does not exist. So make sure to replace every occurence of v.0.7.0 with v.0.6.4 
+# currently there is a bug where v0.7.0 is used, but it does not exist. So make sure to replace every occurence of v.0.7.0 with v.0.6.4
 nano /var/lib/rancher/k3s/server/manifests/kube-vip-daemonset.yaml
 kubectl apply -f /var/lib/rancher/k3s/server/manifests/kube-vip-daemonset.yaml
 ```
 
-8. Get the kubeconfig and add it to your local config on the host machine
+9. Get the kubeconfig and add it to your local config on the host machine
+
 ```
 # Install chocolatey for Powershell or cmd (on host machine)
 https://docs.chocolatey.org/en-us/choco/setup
@@ -118,8 +134,9 @@ cat /etc/rancher/k3s/k3s.yaml
 # make a backup of the current kube config (Windows: C:\Users\<username>\.kube\config) and create another config with the content of the previous k3s.yaml. Change the ip to the master node ip 192.168.x.x
 ```
 
-9. Create the following yaml files on your host machine
-``` 
+10. Create the following yaml files on your host machine
+
+```
 # the address range can be for example 192.168.1.60 - 192.168.1.61.
 # Both IPs need to be available and unused in your network
 # ipaddresspool.yaml
@@ -145,7 +162,8 @@ spec:
   - <INTERFACE>
 ```
 
-10. Install metallb
+11. Install metallb
+
 ```
 # Install helm on your host pc
 choco install kubernetes-helm
