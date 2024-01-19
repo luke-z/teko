@@ -41,7 +41,7 @@ sudo nano /etc/netplan/99-multipass.yaml
 # now add the following content to the 99-multipass.yaml:
 network:
     ethernets:
-        <name of interface>:
+        <name of ubuntu interface>:
             dhcp4: false
             match:
                 macaddress: <mac from ip l>
