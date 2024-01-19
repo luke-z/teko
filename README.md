@@ -204,3 +204,9 @@ kubectl apply -f ipaddresspool.yml
 # Create l2 NIC assignment
 kubectl apply -f l2advertisement.yml
 ```
+
+12. Install longhorn
+
+```
+kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.5.3/deploy/longhorn.yaml
+```
