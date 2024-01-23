@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-dynamic-example
+  name: pvc-rwo-example
 spec:
   accessModes:
     - ReadWriteOnce
@@ -13,16 +13,16 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deployment-dynamic-pvc
+  name: deployment-rwo-pvc
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app-dynamic-pvc
+      app: app-rwo-pvc
   template:
     metadata:
       labels:
-        app: app-dynamic-pvc
+        app: app-rwo-pvc
     spec:
       containers:
       - name: nginx
@@ -33,4 +33,4 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: pvc-dynamic-example
+          claimName: pvc-rwo-example
