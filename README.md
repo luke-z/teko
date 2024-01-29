@@ -205,7 +205,19 @@ kubectl apply -f ipaddresspool.yml
 kubectl apply -f l2advertisement.yml
 ```
 
-12. Install longhorn
+12. Install nfs-common on each vm
+
+```
+# access nodes
+multipass shell <node>
+
+# install nfs-common
+sudo apt update
+sudo apt install nfs-common
+
+```
+
+13. Install longhorn
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.5.3/deploy/longhorn.yaml
