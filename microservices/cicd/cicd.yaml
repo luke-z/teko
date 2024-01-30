@@ -1,0 +1,41 @@
+name: Node.js CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install yarn
+      run: npm install -g yarn
+
+    - name: Install JS dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: build
+      run: yarn build
+
+  deploy:
+      needs: build-and-test
+      runs-on: ubuntu-latest
+
+      steps:
+      - uses: actions/checkout@v4
+      - uses: jsmrcaga/action-netlify-deploy@master
+        with:
+            NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+            NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+            NETLIFY_DEPLOY_MESSAGE: 'Prod deploy: ${{ github.sha }}'
+            NETLIFY_DEPLOY_TO_PROD: true
+            build_directory: .output/public
+            build_command: yarn generate
